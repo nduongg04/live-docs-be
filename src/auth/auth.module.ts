@@ -1,16 +1,15 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { JwtModule } from '@nestjs/jwt';
+import { PassportModule } from '@nestjs/passport';
 import { UsersModule } from 'src/users/users.module';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
-import { GoogleStrategy } from './strategies/google.strategy';
-import { JwtModule, JwtService } from '@nestjs/jwt';
-import { PassportModule } from '@nestjs/passport';
-import { LocalStrategy } from './strategies/local.strategy';
-import { JwtStrategy } from './strategies/jwt.strategy';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { JwtRefreshAuthGuard } from './guards/jwt-refresh.guard';
-import { JwtRefreshStrategy } from './strategies/jwt-refresh.strategy';
 import { JwtAuthGuard } from './guards/jwt.guard';
+import { GoogleStrategy } from './strategies/google.strategy';
+import { JwtRefreshStrategy } from './strategies/jwt-refresh.strategy';
+import { JwtStrategy } from './strategies/jwt.strategy';
+import { LocalStrategy } from './strategies/local.strategy';
 
 @Module({
     imports: [
@@ -21,7 +20,6 @@ import { JwtAuthGuard } from './guards/jwt.guard';
             inject: [ConfigService],
             useFactory: async (configService: ConfigService) => ({
                 secret: configService.get<string>('JWT_SECRET'),
-                signOptions: { expiresIn: '60s' },
             }),
         }),
     ],
@@ -33,7 +31,7 @@ import { JwtAuthGuard } from './guards/jwt.guard';
         JwtStrategy,
         JwtRefreshStrategy,
         {
-            provide: 'APP_GUARD',	
+            provide: 'APP_GUARD',
             useClass: JwtAuthGuard,
         },
     ],

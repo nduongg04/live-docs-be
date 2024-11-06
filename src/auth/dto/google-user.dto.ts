@@ -1,6 +1,6 @@
-import { IsEmail } from "class-validator";
+import { IsEmail } from 'class-validator';
 
 export type GoogleUserDto = {
-	email: string;
-	displayName: string;
-}
+    email: string;
+    displayName: string;
+};

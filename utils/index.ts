@@ -1,4 +1,7 @@
-import { User, UserWithId, UserWithoutPassword } from 'src/users/schema';
+import {
+    UserWithId,
+    UserWithoutPassword,
+} from '../src/users/schema/user.schema';
 
 export const removePasswordField = (user: UserWithId): UserWithoutPassword => {
     const { password, ...userWithoutPassword } = user;

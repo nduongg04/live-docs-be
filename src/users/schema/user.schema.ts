@@ -25,6 +25,9 @@ export class User {
 
     @Prop()
     avatar: string;
+
+    @Prop()
+    accountId: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

@@ -6,11 +6,15 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { Profile } from 'passport-google-oauth20';
+import {
+    UserDocument,
+    UserJwtDto,
+    UserWithId,
+    UserWithoutPassword,
+} from 'src/users/schema/user.schema';
 import { UsersService } from 'src/users/users.service';
 import { removePasswordField } from 'utils';
-import { CreateUserDto } from './../users/dto/create-user-dto';
-import { UserJwtDto, UserWithoutPassword } from 'src/users/schema';
-import { UserWithId } from 'src/users/schema';
+import { CreateUserDto } from '../users/dto/create-user.dto';
 
 @Injectable()
 export class AuthService {
@@ -45,14 +49,18 @@ export class AuthService {
         };
     }
 
-    async register(createUserDto: CreateUserDto) {
+    async register(createUserDto: CreateUserDto, avatar?: Express.Multer.File) {
         const existingUser = await this.usersService.findOneByEmail(
             createUserDto.email,
         );
         if (existingUser) {
             throw new BadRequestException('Email already exists');
         }
-        const createdUser = await this.usersService.create(createUserDto);
+        const createdUser = await this.usersService.create(
+            createUserDto,
+            null,
+            avatar,
+        );
         return {
             ...(await this.generateTokenPair(createdUser)),
             user: removePasswordField(createdUser.toObject()),
@@ -67,13 +75,94 @@ export class AuthService {
             return removePasswordField(user.toObject());
         }
         console.log('Creating user');
-        const createdUser = await this.usersService.create({
-            email: profile.emails[0].value,
-            displayName: profile.displayName,
-            password: '',
-            avatar: profile.photos[0].value,
-        });
+        const createdUser = await this.usersService.create(
+            {
+                email: profile.emails[0].value,
+                displayName: profile.displayName,
+                password: '',
+            },
+            profile.photos[0].value,
+        );
         return removePasswordField(createdUser.toObject());
+    }
+
+    async validateOAuthLogin(profile: any, provider: string) {
+        let userProfile: {
+            email: string;
+            displayName: string;
+            avatar: string;
+            providerId: string;
+        };
+        switch (provider) {
+            case 'google':
+                userProfile = {
+                    email: profile.email,
+                    displayName: profile.name,
+                    avatar: profile.picture,
+                    providerId: profile.sub,
+                };
+                break;
+            case 'facebook':
+                userProfile = {
+                    email: profile.email,
+                    displayName: profile.name,
+                    avatar: profile.picture.data.url,
+                    providerId: profile.id,
+                };
+                break;
+            default:
+                throw new BadRequestException(
+                    `Unsupported provider: ${provider}`,
+                );
+        }
+        let user: UserWithId;
+        const existingAccount = await this.usersService.findAccountByProvider(
+            provider,
+            userProfile.providerId,
+        );
+        if (existingAccount) {
+            user = existingAccount.user.toObject();
+        } else {
+            user = (
+                await this.usersService.findOneByEmail(userProfile.email)
+            )?.toObject();
+
+            if (!user) {
+                user = (
+                    await this.usersService.create(
+                        {
+                            email: userProfile.email,
+                            displayName: userProfile.displayName,
+                            password: Math.random()
+                                .toString(36)
+                                .substring(2, 15),
+                        },
+                        userProfile.avatar,
+                    )
+                ).toObject();
+            }
+
+            await this.usersService.createAccount({
+                provider,
+                providerAccountId: userProfile.providerId,
+                type: 'oauth',
+                user: {
+                    _id: user._id,
+                    email: user.email,
+                    displayName: user.displayName,
+                    avatar: user.avatar,
+                    password: user.password,
+                },
+            });
+        }
+
+        return {
+            ...(await this.generateTokenPair({
+                email: user.email,
+                _id: user._id,
+            })),
+            user: removePasswordField(user),
+        };
     }
 
     async generateAccessToken(user: UserJwtDto) {

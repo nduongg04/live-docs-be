@@ -1,4 +1,5 @@
 import {
+	BadRequestException,
     Body,
     Controller,
     Get,
@@ -6,15 +7,19 @@ import {
     HttpStatus,
     Post,
     Request,
+    UploadedFile,
     UseFilters,
     UseGuards,
+	UseInterceptors,
 } from '@nestjs/common';
 import { DuplicateExceptionFilter } from 'src/exception_filters/email-mongo-exception.filter';
+import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { Public } from '../decorators/public-auth.decorator';
-import { CreateUserDto } from 'src/users/dto/create-user-dto';
 import { AuthService } from './auth.service';
+import { OAuthCallbackDto } from './dto/oauth-callback.dto';
 import { GoogleAuthGuard } from './guards/google.guard';
 import { JwtRefreshAuthGuard } from './guards/jwt-refresh.guard';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { LocalAuthGuard } from './guards/local.guard';
 
 @Controller('auth')
@@ -32,13 +37,30 @@ export class AuthController {
     @Post('register')
     @Public()
     @UseFilters(DuplicateExceptionFilter)
-    async register(@Body() createUserDto: CreateUserDto) {
-        return this.authService.register(createUserDto);
+    @UseInterceptors(FileInterceptor('avatar'))
+    async register(
+        @Body() body,
+        @UploadedFile() avatar?: Express.Multer.File,
+    ) {
+        const createUserDto: CreateUserDto = {
+            email: body.email,
+            displayName: body.displayName,
+            password: body.password,
+        };
+        if (
+            !createUserDto.email ||
+            !createUserDto.password ||
+            !createUserDto.displayName
+        ) {
+            throw new BadRequestException(
+                'Email, password and displayName are required',
+            );
+        }
+        return this.authService.register(createUserDto, avatar);
     }
 
     @Get('profile')
     async profile(@Request() req) {
-        console.log(req.user);
         return req.user;
     }
 
@@ -47,18 +69,15 @@ export class AuthController {
     @UseGuards(GoogleAuthGuard)
     async googleLogin() {}
 
-    // /api/auth/google/callback
-    @Get('google/callback')
+    @Post('google/callback')
     @Public()
-    @UseGuards(GoogleAuthGuard)
-    async googleCallback(@Request() req) {
-        return {
-            ...(await this.authService.generateTokenPair({
-                email: req.user.email,
-                _id: req.user._id.toString(),
-            })),
-            user: req.user,
-        };
+    async googleCallback(@Body() oauthCallbackDto: OAuthCallbackDto) {
+        const returnedValue = await this.authService.validateOAuthLogin(
+            oauthCallbackDto.profile,
+            oauthCallbackDto.provider,
+        );
+        console.log(returnedValue);
+        return returnedValue;
     }
 
     @Post('refresh')

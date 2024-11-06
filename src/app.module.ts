@@ -8,6 +8,7 @@ import { ConfigModule } from '@nestjs/config';
 import { PassportModule } from '@nestjs/passport';
 import { JwtAuthGuard } from './auth/guards/jwt.guard';
 import { RemovePasswordMiddleware } from './middlewares/remove-password.middleware';
+import { UploadModule } from './upload/upload.module';
 
 @Module({
     imports: [
@@ -19,6 +20,7 @@ import { RemovePasswordMiddleware } from './middlewares/remove-password.middlewa
         MongooseModule.forRoot(process.env.MONGODB_URI, {
             dbName: process.env.MONGODB_DB_NAME,
         }),
+        UploadModule,
     ],
     controllers: [AppController],
     providers: [
