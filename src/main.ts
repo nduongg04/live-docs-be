@@ -4,6 +4,7 @@ import { ValidationPipe } from '@nestjs/common';
 import * as session from 'express-session';
 import * as passport from 'passport';
 import { JwtAuthGuard } from './auth/guards/jwt.guard';
+import { setupSwagger } from './swagger';
 
 async function bootstrap() {
     const app = await NestFactory.create(AppModule, {
@@ -16,6 +17,10 @@ async function bootstrap() {
         }),
     );
     app.enableCors({});
+    
+    // Setup Swagger
+    setupSwagger(app);
+    
     await app.listen(4000);
 }
 bootstrap();
