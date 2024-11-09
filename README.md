@@ -1,73 +1,124 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# LiveDocs Backend 🚀
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+<div align="center">
+  <img src="https://github.com/nduongg04/live-docs-fe/blob/main/public/assets/icons/logo-icon.svg" alt="LiveDocs Logo" width="120"/>
+  
+  Backend API for LiveDocs - A modern, real-time collaborative documentation platform.
+  
+  ![NestJS](https://img.shields.io/badge/nestjs-%23E0234E.svg?style=for-the-badge&logo=nestjs&logoColor=white)
+[![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white)](https://www.mongodb.com/)
+[![Jest](https://img.shields.io/badge/Jest-C21325?style=for-the-badge&logo=jest&logoColor=white)](https://jestjs.io/)
+  
+  [API Docs](https://api.livedocs.example.com/docs) · [Frontend Repo](https://github.com/nduongg04/live-docs-fe) 
+</div>
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## 🔗 Related Repositories
 
-## Description
+This is the backend repository of LiveDocs. For the frontend implementation, please visit:
+- [LiveDocs Frontend](https://github.com/nduongg04/live-docs-fe)
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## ✨ Features
 
-## Installation
+- 🔐 User authentication and authorization
+- 📝 Document CRUD operations
+- 📤 File upload handling
 
+## 🛠️ Built With
+
+- [NestJS](https://nestjs.com/) - Node.js framework
+- [TypeScript](https://www.typescriptlang.org/) - Programming Language
+- [MongoDB](https://www.mongodb.com/) - Database
+- [Mongoose](https://mongoosejs.com/) - MongoDB ODM
+- [Jest](https://jestjs.io/) - Testing Framework
+- [Swagger](https://swagger.io/) - API Documentation
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- Node.js (v18 or higher)
+- npm or yarn
+- Git
+- MongoDB
+
+### Installation
+
+1. Clone the repository
 ```bash
-$ npm install
+git clone https://github.com/yourusername/live-docs-be.git
+cd live-docs-be
 ```
 
-## Running the app
-
+2. Install dependencies
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+npm install
+# or
+yarn install
 ```
 
-## Test
+3. Set up environment variables
+Create a `.env` file in the root directory:
+```env
+#MongoDB
+MONGODB_URI=
+MONGODB_DB_NAME=
 
-```bash
-# unit tests
-$ npm run test
+#Google
+GOOGLE_CLIENT_ID=
+GOOGLE_CLIENT_SECRET=
+GOOGLE_CALLBACK_URL=
 
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+#JWT
+JWT_SECRET=
+JWT_REFRESH_TOKEN_SECRET=
+JWT_REFRESH_TOKEN_EXPIRES_IN=
+JWT_ACCESS_TOKEN_EXPIRES_IN=
 ```
 
-## Support
+4. Run the development server
+```bash
+npm run start:dev
+# or
+yarn start:dev
+```
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+The API will be available at `http://localhost:8000`
 
-## Stay in touch
+## Project Structure
+```
+live-docs-be/
+├── src/
+│ ├── auth/         # Authentication modules
+│ ├── users/        # User management
+│ ├── documents/    # Document management
+│ ├── common/       # Shared utilities
+│ └── config/       # Configuration
+├── test/           # Test files
+└── docs/           # Documentation
+```
 
--   Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
--   Website - [https://nestjs.com](https://nestjs.com/)
--   Twitter - [@nestframework](https://twitter.com/nestframework)
+## API Documentation
+
+API documentation is available at `/api-docs` when running the server locally.
+
+## Available Scripts
+
+- `npm run start:dev` - Start development server
+- `npm run build` - Build for production
+- `npm run start:prod` - Start production server
+- `npm run test` - Run tests
+- `npm run test:e2e` - Run end-to-end tests
+- `npm run lint` - Run ESLint
+
+## Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
 ## License
 
-Nest is [MIT licensed](LICENSE).
+This project is licensed under the MIT License.
