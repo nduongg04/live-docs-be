@@ -1,0 +1,9 @@
+services:
+  server:
+    image: public.ecr.aws/y2x6m4d2/project/live-docs-be:latest
+    env_file: ".env"
+    environment:
+      NODE_ENV: production
+    ports:
+      - 4000:4000
+    restart: always
