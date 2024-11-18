@@ -10,7 +10,7 @@
 [![MongoDB](https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white)](https://www.mongodb.com/)
 [![Jest](https://img.shields.io/badge/Jest-C21325?style=for-the-badge&logo=jest&logoColor=white)](https://jestjs.io/)
   
-  [API Docs](https://api.livedocs.example.com/docs) · [Frontend Repo](https://github.com/nduongg04/live-docs-fe) 
+  [API Docs](https://live-docs-be.duong.website/api-docs) · [Frontend Repo](https://github.com/nduongg04/live-docs-fe) 
 </div>
 
 ## 🔗 Related Repositories
